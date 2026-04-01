@@ -226,7 +226,7 @@ export default function PadelTracker() {
                     max="5"
                     value={team1Sets}
                     onChange={(e) => setTeam1Sets(e.target.value)}
-                    placeholder="Sett Lag 1"
+                    placeholder="Games Lag 1"
                     className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <input
@@ -235,7 +235,7 @@ export default function PadelTracker() {
                     max="5"
                     value={team2Sets}
                     onChange={(e) => setTeam2Sets(e.target.value)}
-                    placeholder="Sett Lag 2"
+                    placeholder="Games Lag 2"
                     className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -261,7 +261,7 @@ export default function PadelTracker() {
                 </div>
 
                 <div className="bg-gradient-to-br from-purple-100 to-purple-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-gray-600">Totale sett spilt</p>
+                  <p className="text-sm text-gray-600">Totale games spilt</p>
                   <p className="text-3xl font-bold text-purple-600">{totalSets}</p>
                 </div>
 
@@ -284,11 +284,11 @@ export default function PadelTracker() {
                           <p className="text-lg font-bold text-red-600">{stats[player.id]?.losses || 0}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-gray-600">Sett +</p>
+                          <p className="text-xs text-gray-600">Games +</p>
                           <p className="text-lg font-bold text-blue-600">{stats[player.id]?.setWon || 0}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-gray-600">Sett -</p>
+                          <p className="text-xs text-gray-600">Games -</p>
                           <p className="text-lg font-bold text-red-400">{stats[player.id]?.setLost || 0}</p>
                         </div>
                       </div>
