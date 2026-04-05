@@ -115,6 +115,15 @@ export default function PadelTracker() {
   const totalMatches = matches.length;
   const totalSets = matches.reduce((sum, m) => sum + m.team1Sets + m.team2Sets, 0);
 
+  const flyIds = (() => {
+    const active = players.filter(p => stats[p.id]?.matches > 0);
+    if (!active.length) return new Set();
+    const minWins = Math.min(...active.map(p => stats[p.id].wins));
+    const withMinWins = active.filter(p => stats[p.id].wins === minWins);
+    const minPct = Math.min(...withMinWins.map(p => stats[p.id].wins / stats[p.id].matches));
+    return new Set(withMinWins.filter(p => stats[p.id].wins / stats[p.id].matches === minPct).map(p => p.id));
+  })();
+
   return (
     <>
       <Head>
@@ -268,28 +277,44 @@ export default function PadelTracker() {
                 <h3 className="font-bold text-gray-800 mb-3">Spiller-statistikk</h3>
                 <div className="space-y-2 max-h-96 overflow-y-auto">
                   {players.map(player => (
-                    <div key={player.id} className="bg-gray-50 p-3 rounded-lg text-sm">
-                      <p className="font-semibold text-gray-800">{player.name}</p>
-                      <div className="grid grid-cols-5 gap-1.5 mt-1">
-                        <div>
-                          <p className="text-xs text-gray-600">Kamper</p>
-                          <p className="text-lg font-bold text-orange-600">{stats[player.id]?.matches || 0}</p>
+                    <div key={player.id} className={`p-3 rounded-lg text-sm ${flyIds.has(player.id) ? 'bg-red-50 border-2 border-red-300' : 'bg-gray-50'}`}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <p className="font-semibold text-gray-800">{player.name}</p>
+                        {flyIds.has(player.id) && (
+                          <span className="flex items-center gap-1 text-xs font-bold text-red-500 bg-red-100 px-2 py-0.5 rounded-full">
+                            <img src="/fly.svg" alt="fly" className="w-3.5 h-3.5 inline" />
+                            Flua
+                          </span>
+                        )}
+                      </div>
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="bg-white rounded p-2 text-center">
+                          <p className="text-xs text-gray-500">Kamper</p>
+                          <p className="text-xl font-bold text-orange-600">{stats[player.id]?.matches || 0}</p>
                         </div>
-                        <div>
-                          <p className="text-xs text-gray-600">Seire</p>
-                          <p className="text-lg font-bold text-green-600">{stats[player.id]?.wins || 0}</p>
+                        <div className="bg-white rounded p-2 text-center">
+                          <p className="text-xs text-gray-500">Seire</p>
+                          <p className="text-xl font-bold text-green-600">{stats[player.id]?.wins || 0}</p>
                         </div>
-                        <div>
-                          <p className="text-xs text-gray-600">Tap</p>
-                          <p className="text-lg font-bold text-red-600">{stats[player.id]?.losses || 0}</p>
+                        <div className="bg-white rounded p-2 text-center">
+                          <p className="text-xs text-gray-500">Tap</p>
+                          <p className="text-xl font-bold text-red-600">{stats[player.id]?.losses || 0}</p>
                         </div>
-                        <div>
-                          <p className="text-xs text-gray-600">Games +</p>
-                          <p className="text-lg font-bold text-blue-600">{stats[player.id]?.setWon || 0}</p>
+                        <div className="bg-white rounded p-2 text-center">
+                          <p className="text-xs text-gray-500">Vinn%</p>
+                          <p className="text-xl font-bold text-teal-600">
+                            {stats[player.id]?.matches > 0
+                              ? Math.round((stats[player.id].wins / stats[player.id].matches) * 100)
+                              : 0}%
+                          </p>
                         </div>
-                        <div>
-                          <p className="text-xs text-gray-600">Games -</p>
-                          <p className="text-lg font-bold text-red-400">{stats[player.id]?.setLost || 0}</p>
+                        <div className="bg-white rounded p-2 text-center">
+                          <p className="text-xs text-gray-500">Games +</p>
+                          <p className="text-xl font-bold text-blue-600">{stats[player.id]?.setWon || 0}</p>
+                        </div>
+                        <div className="bg-white rounded p-2 text-center">
+                          <p className="text-xs text-gray-500">Games -</p>
+                          <p className="text-xl font-bold text-red-400">{stats[player.id]?.setLost || 0}</p>
                         </div>
                       </div>
                     </div>
